@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Dark themed metasmoke
-// @description  Enables the dark theme in production mode on metasmoke
-// @author       ArtOfCode
-// @version      0.1.0
-// @match        *://metasmoke.erwaysoftware.com/*
-// @match        *://metasmoke.charcoal-se.org/*
+// @name         Metasmoke Dark Theme
+// @version      0.2.0
+// @description  A dark-themed UI for Metasmoke
+// @author       cocomac
+// @match        https://metasmoke.erwaysoftware.com/*
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==

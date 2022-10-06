@@ -1,87 +1,153 @@
 // ==UserScript==
-// @name         Dark themed metasmoke
-// @description  Enables the dark theme in production mode on metasmoke
-// @author       ArtOfCode
-// @version      0.1.0
-// @match        *://metasmoke.erwaysoftware.com/*
-// @match        *://metasmoke.charcoal-se.org/*
+// @name         Metasmoke Dark Theme
+// @version      0.2.0
+// @description  A dark-themed UI for Metasmoke
+// @author       cocomac
+// @match        https://metasmoke.erwaysoftware.com/*
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
-/* globals csslib */
 
-window.csslib = {
-  createSheet: function () {
-    var style = document.createElement("style");
-    style.appendChild(document.createTextNode(""));
-    document.head.appendChild(style);
-    return style.sheet;
-  },
+'use strict';
+// todo: do it for hamburger button, maybe move autoflags/search buttons to navbar using JS
+/* background color and 'other' color from https://learn.microsoft.com/en-us/windows/apps/design/style/color */
+ /* border color from GitHub branch selector border */
+let css = document.createElement('style');
+css.type = 'text/less';
+css.innerHTML = `
+@text-color-primary: #fff;
+@text-color-secondary: #aaa;
+@border-color: #363b42;
+@background-color: #1f1f1f;
+@elevated-color: #333;
 
-  addRule: function (sheet, selector, index, rules) {
-    var ruleString = "";
-    var ruleKeys = Object.keys(rules);
-    for (var i = 0; i < ruleKeys.length; i++) {
-      ruleString += ruleKeys[i] + ":" + rules[ruleKeys[i]] + " !important;";
+// dark scroll-bars, dark checkboxes
+:root {
+    color-scheme: dark;
+}
+
+// some base settings
+body {
+    color: @text-color-primary !important;
+    background-color: @background-color;
+}
+
+// form elements, inputs, dropdowns, etc.
+.dropdown-toggle {
+     border-color: inherit !important;
+}
+
+.dropdown-toggle, input[type=text], input[type=number], .form-control, select {
+    background-color: @elevated-color !important;
+    border-color: @border-color;
+}
+
+// no striped tables, just have seperators
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: inherit;
+}
+
+// code and a few other things should use a different background color
+.navbar, .footer, code, .nav-tabs li.active a, pre {
+    background-color: @elevated-color;
+    border-width: 0;
+}
+
+// I forgot why I added this - TODO: figure out what this was for
+.panel-body {
+    background-color: @background-color;
+}
+
+// set the color for code
+code, pre {
+    color: @text-color-primary;
+}
+
+// use a secondary color (i.e., not white) for the navbar text
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand {
+    color: @text-color-secondary;
+}
+
+// I forgot which panel this is - TODO: figure it out
+.panel {
+    border: none;
+}
+
+// use the existing navbar color I set
+.nav-tabs li.active a, .navbar-default .navbar-nav>.active>a {
+    color: inherit;
+}
+
+
+// this is when we have multiple pages of info, such as in the list of domains
+.pagination li {
+    span, a {
+        background-color: @elevated-color !important;
+        border-color: @border-color !important;
     }
+}
 
-    if ("insertRule" in sheet) {
-      sheet.insertRule(selector + "{" + ruleString + "}", index);
-    } else if ("addRule" in sheet) {
-      sheet.addRule(selector, ruleString, index);
+// I personally find having the search/flagging icons on the side weird
+// so I hide them here and use JavaScript to add them to the navbar instead
+//
+// this really should be a seperate userscript though so I'll probably
+// seperate it out later
+.icon-nav-bar {
+    visibility: hidden;
+}
+
+// fix giant margin-left (92px) on Skip button under the Review Posts page
+a.review-submit-link {
+    margin-left: inherit !important;
+}
+
+// on the main Metasmoke page, remove strange shadow/glow effect
+.module {
+    box-shadow: none;
+}
+
+.module-title {
+    a, a:visited {
+        color: inherit;
     }
-  }
-};
+}
 
-var userscript = function ($) {
-  $("nav").addClass("navbar-inverse");
+// TODO: The text on the charts is colored
+// incorrectly and there is a white "glow"
+.highcharts-background {
+    fill: @background-color;
+}
 
-  var sheet = csslib.createSheet();
+small, ul.navbar-nav {
+    color: @text-color-secondary !important;
+    code {
+        background-color: @background-color;
+    }
+}
+`;
+document.getElementsByTagName('head')[0].appendChild(css);
+let less2 = document.createElement('script');
+less2.src = "https://cdn.jsdelivr.net/npm/less";
+document.getElementsByTagName('head')[0].appendChild(less2);
 
-  csslib.addRule(sheet, "body", 0, {
-    color: "#ccc",
-    background: "#333"
-  });
+// generates a new element to put on the navbar from a link-title and a URL
+let genNavLink = (title, url) => {
+    let li = document.createElement('li');
+    let link = document.createElement('a');
+    link.innerText = title;
+    link.href = url;
+    li.appendChild(link);
+    return li;
+}
 
-  csslib.addRule(sheet, ".col-md-10 a:not(.btn), .col-md-10 a:not(.btn):visited", 0, {
-    color: "#63a0d4"
-  });
-  csslib.addRule(sheet, ".col-md-10 a:not(.btn):hover, .col-md-10 a:not(.btn):active", 0, {
-    color: "#337ab7"
-  });
-
-  csslib.addRule(sheet, ".table-striped > tbody > tr:nth-of-type(2n+1)", 0, {
-    background: "#393939"
-  });
-
-  csslib.addRule(sheet, ".footer", 0, {
-    background: "#383838"
-  });
-
-  csslib.addRule(sheet, "ul.dropdown-menu", 0, {
-    background: "#333"
-  });
-
-  csslib.addRule(sheet, ".dropdown-menu > li > a", 0, {
-    color: "#ccc",
-    background: "#333"
-  });
-  csslib.addRule(sheet, ".dropdown-menu > li > a:hover", 0, {
-    color: "#ccc",
-    background: "#1a1a1a"
-  });
-
-  csslib.addRule(sheet, "pre", 0, {
-    background: "#3c3c3c",
-    color: "#ccc"
-  });
-
-  csslib.addRule(sheet, ".report-reasons", 0, {
-    background: "#293300"
-  });
-};
-
-var el = document.createElement("script");
-el.type = "application/javascript";
-el.text = "(" + userscript + ")(jQuery);";
-document.body.appendChild(el);
+// items to add to the navbar
+new Map([
+    ["flagging", "https://metasmoke.erwaysoftware.com/flagging"],
+    ["search", "https://metasmoke.erwaysoftware.com/search"]
+]).forEach((url, title) => {
+    // generate the element, and then add it to the navbar
+    document.getElementsByClassName('navbar-nav')[0].appendChild(
+        genNavLink(title, url)
+    );
+});
