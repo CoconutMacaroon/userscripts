@@ -14,110 +14,97 @@
 /* background color and 'other' color from https://learn.microsoft.com/en-us/windows/apps/design/style/color */
  /* border color from GitHub branch selector border */
 let css = document.createElement('style');
-css.type = 'text/less';
 css.innerHTML = `
-@text-color-primary: #fff;
-@text-color-secondary: #aaa;
-@border-color: #363b42;
-@background-color: #1f1f1f;
-@elevated-color: #333;
-
-// dark scroll-bars, dark checkboxes
+/* dark scroll-bars, dark checkboxes */
 :root {
     color-scheme: dark;
+    --text-color-primary: #fff;
+    --text-color-secondary: #aaa;
+    --border-color: #363b42;
+    --background-color: #1f1f1f;
+    --elevated-color: #333;
 }
 
-// some base settings
+/* some base settings */
 body {
-    color: @text-color-primary !important;
-    background-color: @background-color;
+    color: var(--text-color-primary) !important;
+    background-color: var(--background-color);
 }
 
-// form elements, inputs, dropdowns, etc.
+/* form elements, inputs, dropdowns, etc. */
 .dropdown-toggle {
      border-color: inherit !important;
 }
 
 .dropdown-toggle, input[type=text], input[type=number], .form-control, select {
-    background-color: @elevated-color !important;
-    border-color: @border-color;
+    background-color: var(--elevated-color) !important;
+    border-color: var(--border-color);
 }
 
-// no striped tables, just have seperators
+/* no striped tables, just have seperators */
 .table-striped>tbody>tr:nth-of-type(odd) {
     background-color: inherit;
 }
 
-// code and a few other things should use a different background color
+/* code and a few other things should use a different background color */
 .navbar, .footer, code, .nav-tabs li.active a, pre {
-    background-color: @elevated-color;
+    background-color: var(--elevated-color);
     border-width: 0;
 }
 
-// I forgot why I added this - TODO: figure out what this was for
+/* I forgot why I added this - TODO: figure out what this was for */
 .panel-body {
-    background-color: @background-color;
+    background-color: var(--background-color);
 }
 
-// set the color for code
+/* set the color for code */
 code, pre {
-    color: @text-color-primary;
+    color: var(--text-color-primary);
 }
 
-// use a secondary color (i.e., not white) for the navbar text
+/* use a secondary color (i.e., not white) for the navbar text */
 .navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand {
-    color: @text-color-secondary;
+    color: var(--text-color-secondary);
 }
 
-// I forgot which panel this is - TODO: figure it out
+/* I forgot which panel this is - TODO: figure it out */
 .panel {
     border: none;
 }
 
-// use the existing navbar color I set
+/* use the existing navbar color I set */
 .nav-tabs li.active a, .navbar-default .navbar-nav>.active>a {
     color: inherit;
 }
 
 
-// this is when we have multiple pages of info, such as in the list of domains
-.pagination li {
-    span, a {
-        background-color: @elevated-color !important;
-        border-color: @border-color !important;
-    }
+/* this is when we have multiple pages of info, such as in the list of domains */
+.pagination li a, .pagination li span {
+    background-color: var(--elevated-color);
+    border-color: var(--border-color);
 }
 
-// fix giant margin-left (92px) on Skip button under the Review Posts page
-a.review-submit-link {
-    margin-left: inherit !important;
-}
-
-// on the main Metasmoke page, remove strange shadow/glow effect
+/* on the main Metasmoke page, remove strange shadow/glow effect */
 .module {
     box-shadow: none;
 }
 
-.module-title {
-    a, a:visited {
-        color: inherit;
-    }
+.module-title a, .module-title a:visited {
+    color: inherit;
 }
 
-// TODO: The text on the charts is colored
-// incorrectly and there is a white "glow"
+/* TODO: The text on the charts is colored */
+/* incorrectly and there is a white "glow" */
 .highcharts-background {
-    fill: @background-color;
+    fill: var(--background-color);
 }
 
 small, ul.navbar-nav {
-    color: @text-color-secondary !important;
-    code {
-        background-color: @background-color;
-    }
+    color: var(--text-color-secondary) !important;
+}
+
+small code, ul.navbar-nav code {
+    background-color: var(--background-color);
 }
 `;
 document.getElementsByTagName('head')[0].appendChild(css);
-let less2 = document.createElement('script');
-less2.src = "https://cdn.jsdelivr.net/npm/less";
-document.getElementsByTagName('head')[0].appendChild(less2);
