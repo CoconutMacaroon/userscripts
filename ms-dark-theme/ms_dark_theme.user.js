@@ -88,15 +88,6 @@ code, pre {
     }
 }
 
-// I personally find having the search/flagging icons on the side weird
-// so I hide them here and use JavaScript to add them to the navbar instead
-//
-// this really should be a seperate userscript though so I'll probably
-// seperate it out later
-.icon-nav-bar {
-    visibility: hidden;
-}
-
 // fix giant margin-left (92px) on Skip button under the Review Posts page
 a.review-submit-link {
     margin-left: inherit !important;
@@ -130,24 +121,3 @@ document.getElementsByTagName('head')[0].appendChild(css);
 let less2 = document.createElement('script');
 less2.src = "https://cdn.jsdelivr.net/npm/less";
 document.getElementsByTagName('head')[0].appendChild(less2);
-
-// generates a new element to put on the navbar from a link-title and a URL
-let genNavLink = (title, url) => {
-    let li = document.createElement('li');
-    let link = document.createElement('a');
-    link.innerText = title;
-    link.href = url;
-    li.appendChild(link);
-    return li;
-}
-
-// items to add to the navbar
-new Map([
-    ["flagging", "https://metasmoke.erwaysoftware.com/flagging"],
-    ["search", "https://metasmoke.erwaysoftware.com/search"]
-]).forEach((url, title) => {
-    // generate the element, and then add it to the navbar
-    document.getElementsByClassName('navbar-nav')[0].appendChild(
-        genNavLink(title, url)
-    );
-});
